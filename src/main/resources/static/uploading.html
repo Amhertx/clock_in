@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="/excleimport" method="POST" enctype="multipart/form-data">
+    <input type="file" id="file1" name="fileContent">
+</form>
+<button id='btn'> 提交</button>
+
+<hr/>
+
+<table border="1px" cellspacing="0px" cellpadding="0px" style="text-align: center">
+    <thead><tr><th>已签到学生</th></tr></thead>
+    <tbody id="clockStudent"><tr><td>111</td></tr></tbody>
+</table>
+<table border="1px" cellspacing="0px" cellpadding="0px" style="text-align: center">
+    <thead><tr><th>未签到学生</th></tr></thead>
+    <tbody id="noClockStudent"><tr><td>111</td></tr></tbody>
+</table>
+
+</body>
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+<script>
+    $(function () {
+
+        clockStudent()
+
+        noClockStudent()
+
+        function clockStudent() {
+            $("#clockStudent").empty()
+            $.get("/clockStudent",function (data) {
+                console.log(data)
+                if(data.length>0){
+                    $.each(data,function (index,item) {
+                        $("#clockStudent").append("<tr><td>"+item.nama+"</td></tr>")
+                    })
+                }else{
+                    $("#clockStudent").append("<tr><td>还没有学生签到</td></tr>")
+                }
+            })
+        }
+
+        function noClockStudent() {
+            $("#noClockStudent").empty()
+            $.get("/noClockStudent",function (data) {
+                console.log(data)
+                if(data.length>0){
+                    $.each(data,function (index,item) {
+                        $("#noClockStudent").append("<tr><td>"+item.nama+"</td></tr>")
+                    })
+                }else{
+                    $("#noClockStudent").append("<tr><td>还没有学生签到</td></tr>")
+                }
+            })
+        }
+
+
+    })
+
+    $("#btn").click(function() {
+        var formData = new FormData();
+        formData.append("excelFile", $("#file1")[0].files[0]);
+        $.ajax({
+            url: "/excleimport",
+            data: formData,
+            type: "post",
+            processData: false,
+            contentType: false,
+            success: function(data) {
+               alert(data.result);
+            },
+            error: function() {
+                alert("失败")
+            }
+        });
+    })
+</script>
+
+</html>

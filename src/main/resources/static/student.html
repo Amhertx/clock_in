@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生签到</title>
+</head>
+<body>
+<h1>学生签到</h1>
+<p>输入名字签到：<input type="text" id="studentName"/><button type="button" id="btn">签到</button></p>
+<span id="a" style="color: #ff0000"></span>
+
+</body>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script>
+    $("#btn").click(function () {
+        var name = $("#studentName").val()
+        $.ajax({
+            type:"PUT",
+            url:"/student",
+            data:{name:name},
+            success:function (data) {
+                console.log(data)
+                if(data == "更新成功"){
+                    $("#a").append("签到成功");
+                }else if (data == "更新失败"){
+                    $("#a").append("更新失败");
+                }
+
+
+            }
+        })
+    })
+</script>
+</html>
